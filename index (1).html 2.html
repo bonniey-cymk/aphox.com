@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support Us – Donate via Pesapal</title>
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --bg:        #0b0f1a;
+      --surface:   #111827;
+      --card:      #1a2235;
+      --border:    #2a3650;
+      --accent:    #3b82f6;
+      --accent2:   #06b6d4;
+      --success:   #10b981;
+      --warn:      #f59e0b;
+      --danger:    #ef4444;
+      --text:      #e2e8f0;
+      --muted:     #94a3b8;
+      --radius:    12px;
+      --font:      'Segoe UI', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      width: 100%;
+      padding: 56px 24px 40px;
+      text-align: center;
+      background: linear-gradient(160deg, #0f1f3d 0%, var(--bg) 60%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(59,130,246,.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(59,130,246,.12);
+      border: 1px solid rgba(59,130,246,.3);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      background: linear-gradient(135deg, #e2e8f0 30%, var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 480px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+    .payment-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .badge {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge .dot { width: 7px; height: 7px; border-radius: 50%; }
+    .dot-green  { background: var(--success); }
+    .dot-blue   { background: var(--accent); }
+    .dot-yellow { background: var(--warn); }
+
+    /* ── MAIN CARD ── */
+    .main {
+      width: 100%;
+      max-width: 520px;
+      padding: 0 16px 60px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── AMOUNT PRESETS ── */
+    .amount-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .preset-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px 8px;
+      cursor: pointer;
+      transition: all .18s;
+      text-align: center;
+    }
+    .preset-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .preset-btn.active {
+      background: rgba(59,130,246,.12);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .preset-btn small { display: block; font-size: 10px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+
+    /* ── INPUTS ── */
+    .field { margin-bottom: 14px; }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: .04em;
+    }
+    input, select {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 15px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color .18s;
+      font-family: var(--font);
+      appearance: none;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    input::placeholder { color: var(--muted); }
+    .input-prefix {
+      position: relative;
+    }
+    .input-prefix span {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 15px;
+      pointer-events: none;
+    }
+    .input-prefix input { padding-left: 42px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ── CURRENCY TOGGLE ── */
+    .currency-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .cur-btn {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 9px;
+      cursor: pointer;
+      text-align: center;
+      transition: all .18s;
+    }
+    .cur-btn.active {
+      background: rgba(59,130,246,.1);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── PAYMENT METHOD TABS ── */
+    .method-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .method-tab {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 10px 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: all .18s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .method-tab .icon { font-size: 18px; }
+    .method-tab.active {
+      background: rgba(6,182,212,.08);
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+    .method-tab:hover { border-color: var(--accent2); }
+
+    /* ── PANEL ── */
+    .panel { display: none; }
+    .panel.visible { display: block; }
+
+    /* ── DONATE BUTTON ── */
+    .donate-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: .02em;
+      padding: 16px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity .18s, transform .12s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .donate-btn:hover { opacity: .9; transform: translateY(-1px); }
+    .donate-btn:active { transform: translateY(0); }
+    .donate-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── STATUS / IFRAME ── */
+    .status-box {
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 14px;
+      margin-top: 14px;
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+    .status-box.show { display: flex; }
+    .status-box.info { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.3); color: #93c5fd; }
+    .status-box.error { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: #fca5a5; }
+    .status-box.success { background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.3); color: #6ee7b7; }
+
+    .iframe-wrap {
+      display: none;
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-top: 16px;
+    }
+    .iframe-wrap.show { display: block; }
+    .iframe-wrap iframe {
+      width: 100%;
+      height: 540px;
+      border: none;
+      background: #fff;
+    }
+    .iframe-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .close-iframe {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 2px 6px;
+    }
+    .close-iframe:hover { color: var(--text); }
+
+    /* ── TRUST FOOTER ── */
+    .trust {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+    .spinner.show { display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── CONFIG NOTICE ── */
+    .config-notice {
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.3);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: #fcd34d;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .config-notice strong { color: var(--warn); }
+    .config-notice code {
+      background: rgba(0,0,0,.3);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+
+    /* ── API CONFIG PANEL ── */
+    .api-config {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .api-config summary {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--warn);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .api-config summary::marker { display: none; }
+    .api-config .config-fields { margin-top: 14px; }
+    .api-config input { font-size: 13px; font-family: monospace; }
+
+    @media (max-width: 480px) {
+      .row { grid-template-columns: 1fr; }
+      .amount-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-badge">🔒 Secure Donation</div>
+  <h1>Support Our Mission</h1>
+  <p>Every contribution makes a difference. Pay locally with M-Pesa or internationally with your card — all through Pesapal's secure gateway.</p>
+  <div class="payment-badges">
+    <div class="badge"><span class="dot dot-green"></span> M-Pesa</div>
+    <div class="badge"><span class="dot dot-blue"></span> Visa / Mastercard</div>
+    <div class="badge"><span class="dot dot-blue"></span> AMEX</div>
+    <div class="badge"><span class="dot dot-yellow"></span> Airtel Money</div>
+    <div class="badge"><span class="dot dot-green"></span> T-Kash</div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- Dev config panel -->
+  <details class="api-config" id="configPanel">
+    <summary>⚙️ Developer Setup — Enter your Pesapal credentials</summary>
+    <div class="config-fields">
+      <div class="field">
+        <label>CONSUMER KEY</label>
+        <input type="text" id="consumerKey" placeholder="Your Pesapal Consumer Key" />
+      </div>
+      <div class="field">
+        <label>CONSUMER SECRET</label>
+        <input type="password" id="consumerSecret" placeholder="Your Pesapal Consumer Secret" />
+      </div>
+      <div class="field">
+        <label>IPN NOTIFICATION ID (from RegisterIPNURL)</label>
+        <input type="text" id="ipnId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+      </div>
+      <div class="field">
+        <label>ENVIRONMENT</label>
+        <select id="envSelect">
+          <option value="sandbox">Sandbox (Testing)</option>
+          <option value="live">Live (Production)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>CALLBACK URL (where Pesapal redirects after payment)</label>
+        <input type="text" id="callbackUrl" placeholder="https://yourdomain.com/payment-callback" />
+      </div>
+    </div>
+  </details>
+
+  <div class="config-notice">
+    <strong>📌 Setup required:</strong> Expand the <strong>Developer Setup</strong> panel above and enter your Pesapal credentials. 
+    Get yours at <code>developer.pesapal.com</code>. Your IPN ID is obtained after calling <code>RegisterIPNURL</code>.
+  </div>
+
+  <!-- Amount -->
+  <div class="card">
+    <div class="section-title">Choose Currency</div>
+    <div class="currency-toggle">
+      <button class="cur-btn active" data-cur="KES" onclick="setCurrency('KES',this)">🇰🇪 KES</button>
+      <button class="cur-btn" data-cur="USD" onclick="setCurrency('USD',this)">🇺🇸 USD</button>
+      <button class="cur-btn" data-cur="UGX" onclick="setCurrency('UGX',this)">🇺🇬 UGX</button>
+      <button class="cur-btn" data-cur="TZS" onclick="setCurrency('TZS',this)">🇹🇿 TZS</button>
+    </div>
+
+    <div class="section-title">Select Amount</div>
+    <div class="amount-grid" id="presetGrid"></div>
+
+    <div class="field">
+      <label>CUSTOM AMOUNT</label>
+      <div class="input-prefix">
+        <span id="currSymbol">KES</span>
+        <input type="number" id="customAmount" placeholder="Enter amount" min="1" oninput="clearPreset()" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Donor details -->
+  <div class="card">
+    <div class="section-title">Your Details</div>
+    <div class="row">
+      <div class="field">
+        <label>FIRST NAME</label>
+        <input type="text" id="firstName" placeholder="Jane" />
+      </div>
+      <div class="field">
+        <label>LAST NAME</label>
+        <input type="text" id="lastName" placeholder="Doe" />
+      </div>
+    </div>
+    <div class="field">
+      <label>EMAIL ADDRESS</label>
+      <input type="email" id="email" placeholder="jane@example.com" />
+    </div>
+    <div class="field">
+      <label>PHONE NUMBER</label>
+      <input type="tel" id="phone" placeholder="+254700000000" />
+    </div>
+    <div class="field">
+      <label>COUNTRY</label>
+      <select id="country">
+        <option value="KE">Kenya</option>
+        <option value="UG">Uganda</option>
+        <option value="TZ">Tanzania</option>
+        <option value="RW">Rwanda</option>
+        <option value="ZM">Zambia</option>
+        <option value="US">United States</option>
+        <option value="GB">United Kingdom</option>
+        <option value="DE">Germany</option>
+        <option value="FR">France</option>
+        <option value="ZA">South Africa</option>
+        <option value="NG">Nigeria</option>
+        <option value="AU">Australia</option>
+        <option value="CA">Canada</option>
+        <option value="IN">India</option>
+        <option value="CN">China</option>
+        <option value="AE">UAE</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>MESSAGE (OPTIONAL)</label>
+      <input type="text" id="message" placeholder="What's this donation for?" maxlength="100" />
+    </div>
+  </div>
+
+  <!-- Payment method info -->
+  <div class="card">
+    <div class="section-title">Payment Method</div>
+    <div class="method-tabs">
+      <div class="method-tab active" onclick="setMethod('mpesa',this)">
+        <span class="icon">📱</span> M-Pesa
+      </div>
+      <div class="method-tab" onclick="setMethod('card',this)">
+        <span class="icon">💳</span> Card
+      </div>
+      <div class="method-tab" onclick="setMethod('airtel',this)">
+        <span class="icon">📶</span> Airtel
+      </div>
+      <div class="method-tab" onclick="setMethod('bank',this)">
+        <span class="icon">🏦</span> Bank
+      </div>
+    </div>
+
+    <div class="panel visible" id="panel-mpesa">
+      <p style="font-size:13px; color:var(--muted); line-height:1.6;">
+        You'll be directed to Pesapal's secure checkout where you'll enter your M-Pesa number and receive an STK push prompt on your phone. Confirm the payment to complete your donation. ✅
+      </p>
+    </div>
+    <div class="panel" id="panel-card">
+      <p style="font-size:13px; color:var(--muted); line-height:1.6;">
+        Pay with Visa, Mastercard, or AMEX. All card transactions use 3D Secure authentication. Card details are never stored on our servers. 🔒
+      </p>
+    </div>
+    <div class="panel" id="panel-airtel">
+      <p style="font-size:13px; color:var(--muted); line-height:1.6;">
+        Enter your Airtel Money number on Pesapal's checkout page and approve the payment prompt on your phone. 📶
+      </p>
+    </div>
+    <div class="panel" id="panel-bank">
+      <p style="font-size:13px; color:var(--muted); line-height:1.6;">
+        Bank transfer / EFT options will appear on Pesapal's checkout page. Processing may take 1–3 business days. 🏦
+      </p>
+    </div>
+
+    <p style="font-size:11px;color:var(--muted);margin-top:14px;">
+      All payment methods above are presented on Pesapal's checkout — your selection here is just for reference. Pesapal auto-detects the best options for your region and currency.
+    </p>
+  </div>
+
+  <!-- Status -->
+  <div class="status-box info" id="statusBox">
+    <span>ℹ️</span>
+    <span id="statusMsg">Preparing your donation...</span>
+  </div>
+
+  <!-- Donate button -->
+  <button class="donate-btn" id="donateBtn" onclick="initiateDonation()">
+    <div class="spinner" id="btnSpinner"></div>
+    <span id="btnLabel">💚 Donate Now</span>
+  </button>
+
+  <!-- Pesapal iframe -->
+  <div class="iframe-wrap" id="iframeWrap">
+    <div class="iframe-header">
+      <span>🔒 Pesapal Secure Checkout</span>
+      <button class="close-iframe" onclick="closeIframe()">✕</button>
+    </div>
+    <iframe id="pesapalFrame" src="" title="Pesapal Checkout"></iframe>
+  </div>
+
+  <!-- Trust signals -->
+  <div class="trust">
+    <div class="trust-item">🔒 256-bit SSL</div>
+    <div class="trust-item">✅ PCI/DSS Compliant</div>
+    <div class="trust-item">🌍 Local & International</div>
+    <div class="trust-item">⚡ Instant confirmation</div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ══════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════
+const PESAPAL_URLS = {
+  sandbox: 'https://cybqa.pesapal.com/pesapalv3',
+  live:    'https://pay.pesapal.com/v3'
+};
+
+// Presets per currency (label, amount)
+const PRESETS = {
+  KES: [
+    { label: 'KES 500',   amount: 500,   note: '~$4' },
+    { label: 'KES 1,000', amount: 1000,  note: '~$8' },
+    { label: 'KES 2,500', amount: 2500,  note: '~$20' },
+    { label: 'KES 5,000', amount: 5000,  note: '~$40' },
+    { label: 'KES 10K',   amount: 10000, note: '~$80' },
+    { label: 'Custom',    amount: null,   note: '...' }
+  ],
+  USD: [
+    { label: '$5',   amount: 5,    note: 'Starter' },
+    { label: '$20',  amount: 20,   note: 'Supporter' },
+    { label: '$50',  amount: 50,   note: 'Champion' },
+    { label: '$100', amount: 100,  note: 'Hero' },
+    { label: '$500', amount: 500,  note: 'Patron' },
+    { label: 'Custom', amount: null, note: '...' }
+  ],
+  UGX: [
+    { label: 'UGX 20K',  amount: 20000,  note: '~$5' },
+    { label: 'UGX 50K',  amount: 50000,  note: '~$13' },
+    { label: 'UGX 100K', amount: 100000, note: '~$27' },
+    { label: 'UGX 200K', amount: 200000, note: '~$55' },
+    { label: 'UGX 500K', amount: 500000, note: '~$135' },
+    { label: 'Custom',   amount: null,    note: '...' }
+  ],
+  TZS: [
+    { label: 'TZS 10K',  amount: 10000,  note: '~$4' },
+    { label: 'TZS 25K',  amount: 25000,  note: '~$10' },
+    { label: 'TZS 50K',  amount: 50000,  note: '~$20' },
+    { label: 'TZS 100K', amount: 100000, note: '~$40' },
+    { label: 'TZS 250K', amount: 250000, note: '~$100' },
+    { label: 'Custom',   amount: null,    note: '...' }
+  ]
+};
+
+let currentCurrency = 'KES';
+let selectedAmount  = null;
+
+// ── Currency switch ──
+function setCurrency(cur, btn) {
+  currentCurrency = cur;
+  document.querySelectorAll('.cur-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('currSymbol').textContent = cur;
+  selectedAmount = null;
+  document.getElementById('customAmount').value = '';
+  renderPresets();
+}
+
+function renderPresets() {
+  const grid = document.getElementById('presetGrid');
+  grid.innerHTML = '';
+  PRESETS[currentCurrency].forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'preset-btn';
+    btn.innerHTML = `${p.label}<small>${p.note}</small>`;
+    if (p.amount === null) {
+      btn.onclick = () => {
+        clearPreset();
+        document.getElementById('customAmount').focus();
+      };
+    } else {
+      btn.onclick = () => selectPreset(p.amount, btn);
+    }
+    grid.appendChild(btn);
+  });
+}
+
+function selectPreset(amount, btn) {
+  selectedAmount = amount;
+  document.getElementById('customAmount').value = '';
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function clearPreset() {
+  selectedAmount = null;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+}
+
+// ── Method tabs ──
+function setMethod(method, btn) {
+  document.querySelectorAll('.method-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('visible'));
+  document.getElementById('panel-' + method).classList.add('visible');
+}
+
+// ── UI helpers ──
+function showStatus(msg, type = 'info') {
+  const box = document.getElementById('statusBox');
+  const icons = { info: 'ℹ️', error: '❌', success: '✅' };
+  box.className = 'status-box show ' + type;
+  document.getElementById('statusMsg').textContent = msg;
+  box.querySelector('span').textContent = icons[type];
+}
+function hideStatus() {
+  document.getElementById('statusBox').classList.remove('show');
+}
+function setLoading(on) {
+  const btn = document.getElementById('donateBtn');
+  const spinner = document.getElementById('btnSpinner');
+  const label = document.getElementById('btnLabel');
+  btn.disabled = on;
+  spinner.classList.toggle('show', on);
+  label.textContent = on ? 'Processing…' : '💚 Donate Now';
+}
+
+// ── CORS proxy helper (needed for browser-side Pesapal API calls) ──
+// In production, make these calls from YOUR backend.
+// Tries multiple proxies in order until one works.
+const CORS_PROXIES = [
+  url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+  url => 'https://corsproxy.io/?' + encodeURIComponent(url),
+  url => 'https://proxy.cors.sh/' + url,
+];
+
+async function apiCall(url, method, body, token) {
+  const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+
+  let lastError;
+  for (const proxyFn of CORS_PROXIES) {
+    const proxyUrl = proxyFn(url);
+    try {
+      const resp = await fetch(proxyUrl, {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined
+      });
+      if (!resp.ok) {
+        const err = await resp.text();
+        throw new Error('API error ' + resp.status + ': ' + err);
+      }
+      return resp.json();
+    } catch (err) {
+      lastError = err;
+      console.warn('Proxy failed, trying next...', proxyUrl, err.message);
+    }
+  }
+  throw new Error('All proxies failed. Last error: ' + lastError.message);
+}
+
+// ══════════════════════════════════════════════
+//  MAIN FLOW
+// ══════════════════════════════════════════════
+async function initiateDonation() {
+  hideStatus();
+
+  // 1. Read credentials
+  const consumerKey    = document.getElementById('consumerKey').value.trim();
+  const consumerSecret = document.getElementById('consumerSecret').value.trim();
+  const ipnId          = document.getElementById('ipnId').value.trim();
+  const callbackUrl    = document.getElementById('callbackUrl').value.trim() || window.location.href;
+  const env            = document.getElementById('envSelect').value;
+  const baseUrl        = PESAPAL_URLS[env];
+
+  if (!consumerKey || !consumerSecret || !ipnId) {
+    showStatus('Please open the Developer Setup panel and fill in your Pesapal credentials.', 'error');
+    document.getElementById('configPanel').open = true;
+    return;
+  }
+
+  // 2. Read form
+  const amount = selectedAmount || parseFloat(document.getElementById('customAmount').value);
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName  = document.getElementById('lastName').value.trim();
+  const email     = document.getElementById('email').value.trim();
+  const phone     = document.getElementById('phone').value.trim();
+  const country   = document.getElementById('country').value;
+  const message   = document.getElementById('message').value.trim() || 'Donation';
+
+  if (!amount || amount <= 0) { showStatus('Please select or enter a donation amount.', 'error'); return; }
+  if (!firstName)             { showStatus('Please enter your first name.', 'error'); return; }
+  if (!email && !phone)       { showStatus('Please provide at least an email or phone number.', 'error'); return; }
+
+  setLoading(true);
+  showStatus('Authenticating with Pesapal…', 'info');
+
+  try {
+    // ── STEP 1: Get bearer token ──
+    const authData = await apiCall(
+      baseUrl + '/api/Auth/RequestToken',
+      'POST',
+      { consumer_key: consumerKey, consumer_secret: consumerSecret },
+      null
+    );
+    const token = authData.token;
+    if (!token) throw new Error('Authentication failed — check your credentials.');
+
+    showStatus('Submitting order request…', 'info');
+
+    // ── STEP 2: SubmitOrderRequest ──
+    const orderId = 'DON-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+
+    const orderPayload = {
+      id:           orderId,
+      currency:     currentCurrency,
+      amount:       amount,
+      description:  message.substring(0, 100),
+      callback_url: callbackUrl,
+      redirect_mode: 'PARENT_WINDOW',
+      notification_id: ipnId,
+      billing_address: {
+        email_address: email || undefined,
+        phone_number:  phone || undefined,
+        country_code:  country,
+        first_name:    firstName,
+        last_name:     lastName || ''
+      }
+    };
+
+    const orderResp = await apiCall(
+      baseUrl + '/api/Transactions/SubmitOrderRequest',
+      'POST',
+      orderPayload,
+      token
+    );
+
+    if (!orderResp.redirect_url) throw new Error('No redirect URL returned from Pesapal. Response: ' + JSON.stringify(orderResp));
+
+    showStatus('Redirecting to Pesapal checkout…', 'success');
+    setLoading(false);
+
+    // ── STEP 3: Load Pesapal in iframe ──
+    openCheckout(orderResp.redirect_url);
+
+  } catch (err) {
+    setLoading(false);
+    showStatus('Error: ' + err.message, 'error');
+    console.error('Pesapal error:', err);
+  }
+}
+
+function openCheckout(url) {
+  const wrap  = document.getElementById('iframeWrap');
+  const frame = document.getElementById('pesapalFrame');
+  frame.src = url;
+  wrap.classList.add('show');
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeIframe() {
+  const wrap  = document.getElementById('iframeWrap');
+  const frame = document.getElementById('pesapalFrame');
+  wrap.classList.remove('show');
+  frame.src = '';
+  hideStatus();
+}
+
+// ── Listen for Pesapal callback in iframe ──
+window.addEventListener('message', function(e) {
+  if (e.data && typeof e.data === 'string' && e.data.includes('pesapal')) {
+    showStatus('Payment received! Thank you for your donation. 💚', 'success');
+    closeIframe();
+  }
+});
+
+// ── Init ──
+renderPresets();
+</script>
+
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║              PESAPAL DONATE INTEGRATION — NOTES                  ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║  FLOW                                                            ║
+  ║  1. POST /api/Auth/RequestToken  →  get bearer token             ║
+  ║  2. POST /api/Transactions/SubmitOrderRequest  →  get iFrame URL ║
+  ║  3. Load redirect_url in iframe or redirect full page            ║
+  ║  4. Pesapal calls your IPN URL when payment completes            ║
+  ║  5. GET /api/Transactions/GetTransactionStatus  →  verify        ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║  PAYMENT METHODS (2D — no 3DS redirect needed for these):        ║
+  ║  • M-Pesa STK Push (KES, Kenya)                                  ║
+  ║  • Airtel Money (KES/UGX/TZS)                                    ║
+  ║  • T-Kash (TZS, Tanzania)                                        ║
+  ║  • MTN Mobile Money (UGX, Uganda)                                ║
+  ║  • Visa / Mastercard / AMEX  (international, 2D form fill)       ║
+  ║  • Bank EFT                                                      ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║  PRODUCTION RECOMMENDATION                                        ║
+  ║  Move the auth token call & SubmitOrderRequest to your backend.  ║
+  ║  Never expose consumer_secret in client-side JavaScript.         ║
+  ║  The CORS proxy (corsproxy.io) here is for demo only.            ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+
+</body>
+</html>
